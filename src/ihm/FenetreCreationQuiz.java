@@ -210,14 +210,22 @@ public class FenetreCreationQuiz extends javax.swing.JFrame {
             return;
         }
         
-        Quiz quiz = new Quiz(0, titreQuiz);
         QuizDAO quizDAO = new QuizDAO();
-        int quizId = quizDAO.save(quiz);
+        int quizId = quizDAO.ajouterQuiz(titreQuiz);
         
         if (quizId > 0) {
             QuestionDAO questionDAO = new QuestionDAO();
             for (Question question : questionsAjoutees) {
-                questionDAO.save(question, quizId);
+                List<String> choix = question.getChoix();
+                questionDAO.ajouterQuestion(
+                    question.getEnonce(),
+                    choix.get(0),
+                    choix.get(1),
+                    choix.get(2),
+                    choix.get(3),
+                    question.getBonneReponse(),
+                    quizId
+                );
             }
             
             JOptionPane.showMessageDialog(this, 

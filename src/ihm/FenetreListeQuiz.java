@@ -6,8 +6,8 @@ package ihm;
 
 import DAO.QuizDAO;
 import metier.Quiz;
+import model.QuizTableModel;
 import java.util.List;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -16,29 +16,22 @@ import javax.swing.table.DefaultTableModel;
 public class FenetreListeQuiz extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FenetreListeQuiz.class.getName());
+    private QuizTableModel quizTableModel;
 
     /**
      * Creates new form FenetreListeQuiz
      */
     public FenetreListeQuiz() {
         initComponents();
+        quizTableModel = new QuizTableModel();
+        tableQuizzes.setModel(quizTableModel);
         chargerQuizzes();
     }
 
     private void chargerQuizzes() {
         QuizDAO quizDAO = new QuizDAO();
-        List<Quiz> quizzes = quizDAO.findAll();
-        
-        DefaultTableModel model = (DefaultTableModel) tableQuizzes.getModel();
-        model.setRowCount(0); // Clear existing rows
-        
-        for (Quiz quiz : quizzes) {
-            model.addRow(new Object[]{
-                quiz.getId(),
-                quiz.getTitre(),
-                quiz.getQuestions().size()
-            });
-        }
+        List<Quiz> quizzes = quizDAO.recupererListQuiz();
+        quizTableModel.setItems(quizzes);
     }
 
     /**
