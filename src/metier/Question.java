@@ -8,17 +8,17 @@ public class Question {
     private int id;
     private String enonce;
     private List<String> choix;
-    private int indexBonneReponse;
+    private int bonneReponse;
 
     public Question() {
         this.choix = new ArrayList<>();
     }
 
-    public Question(int id, String enonce, List<String> choix, int indexBonneReponse) {
+    public Question(int id, String enonce, List<String> choix, int bonneReponse) {
         this.id = id;
         this.enonce = enonce;
         this.choix = choix;
-        this.indexBonneReponse = indexBonneReponse;
+        this.bonneReponse = bonneReponse;
     }
 
     public int getId() {
@@ -45,11 +45,11 @@ public class Question {
         this.choix = choix;
     }
 
-    public int getIndexBonneReponse() {
-        return indexBonneReponse;
+    public int getBonneReponse() {
+        return bonneReponse;
     }
 
-    public void setIndexBonneReponse(int indexBonneReponse) {
-        this.indexBonneReponse = indexBonneReponse;
+    public void setBonneReponse(int bonneReponse) {
+        this.bonneReponse = bonneReponse;
     }
 }

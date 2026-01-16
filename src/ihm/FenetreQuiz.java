@@ -15,9 +15,13 @@ import metier.Question;
  * @author Mara
  */
 public class FenetreQuiz extends javax.swing.JFrame {
+    private static final double PERCENTAGE_MULTIPLIER = 100.0;
+    
     private List<Question> questions;
     private int indexQuestion = 0;
     private String titreQuiz;
+    private int score = 0;
+    private int quizId = -1;
 
 private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FenetreQuiz.class.getName());
 
@@ -134,11 +138,13 @@ private void chargerQuestions() {
 
     if (quizTrouve != null) {
         questions = quizTrouve.getQuestions();
+        quizId = quizTrouve.getId();
     } else {
         questions = new java.util.ArrayList<>();
     }
 
     indexQuestion = 0;
+    score = 0;
 }
 
 
@@ -181,10 +187,58 @@ radioD.setText(choix.get(3));
     }//GEN-LAST:event_radioDActionPerformed
 
     private void btnSuivantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuivantActionPerformed
-        indexQuestion++;
-afficherQuestion();
+        // Check if an answer is selected
+        if (buttonGroup1.getSelection() != null) {
+            // Determine which radio button is selected
+            int selectedAnswer = -1;
+            if (radioA.isSelected()) selectedAnswer = 0;
+            else if (radioB.isSelected()) selectedAnswer = 1;
+            else if (radioC.isSelected()) selectedAnswer = 2;
+            else if (radioD.isSelected()) selectedAnswer = 3;
 
+            // Check if the answer is correct
+            if (selectedAnswer != -1 && indexQuestion < questions.size()) {
+                Question currentQuestion = questions.get(indexQuestion);
+                if (selectedAnswer == currentQuestion.getBonneReponse()) {
+                    score++;
+                }
+            }
+        }
+
+        indexQuestion++;
+        
+        if (indexQuestion >= questions.size()) {
+            // Quiz finished - show results
+            afficherResultats();
+        } else {
+            afficherQuestion();
+        }
     }//GEN-LAST:event_btnSuivantActionPerformed
+
+    private void afficherResultats() {
+        int totalQuestions = questions.size();
+        double pourcentage = totalQuestions > 0 ? (score * PERCENTAGE_MULTIPLIER / totalQuestions) : 0;
+        
+        String message = String.format(
+            "Quiz terminé!\n\nScore: %d/%d (%.1f%%)",
+            score, totalQuestions, pourcentage
+        );
+        
+        javax.swing.JOptionPane.showMessageDialog(
+            this,
+            message,
+            "Résultats du Quiz",
+            javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );
+        
+        // Note: Saving attempt would require user context
+        // For now, we just show the results
+        // A proper implementation would save using TentativeDAO:
+        // TentativeDAO tentativeDAO = new TentativeDAO();
+        // tentativeDAO.save(new Tentative(currentUser, currentQuiz, score));
+        
+        this.dispose();
+    }
 
     /**
      * @param args the command line arguments

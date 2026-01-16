@@ -40,4 +40,32 @@ public class QuestionDAO {
 
         return questions;
     }
+
+    public void save(Question question, int quizId) {
+        String sql = "INSERT INTO question (quiz_id, enonce, choixA, choixB, choixC, choixD, bonneReponse) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, quizId);
+            ps.setString(2, question.getEnonce());
+            
+            List<String> choix = question.getChoix();
+            if (choix == null || choix.size() != 4) {
+                throw new IllegalArgumentException("Question must have exactly 4 choices");
+            }
+            
+            ps.setString(3, choix.get(0));
+            ps.setString(4, choix.get(1));
+            ps.setString(5, choix.get(2));
+            ps.setString(6, choix.get(3));
+            ps.setInt(7, question.getBonneReponse());
+            
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
