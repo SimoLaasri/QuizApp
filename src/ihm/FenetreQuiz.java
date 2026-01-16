@@ -15,6 +15,8 @@ import metier.Question;
  * @author Mara
  */
 public class FenetreQuiz extends javax.swing.JFrame {
+    private static final double PERCENTAGE_MULTIPLIER = 100.0;
+    
     private List<Question> questions;
     private int indexQuestion = 0;
     private String titreQuiz;
@@ -215,7 +217,7 @@ radioD.setText(choix.get(3));
 
     private void afficherResultats() {
         int totalQuestions = questions.size();
-        double pourcentage = totalQuestions > 0 ? (score * 100.0 / totalQuestions) : 0;
+        double pourcentage = totalQuestions > 0 ? (score * PERCENTAGE_MULTIPLIER / totalQuestions) : 0;
         
         String message = String.format(
             "Quiz terminé!\n\nScore: %d/%d (%.1f%%)",

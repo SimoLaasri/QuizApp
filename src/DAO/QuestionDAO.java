@@ -52,6 +52,10 @@ public class QuestionDAO {
             ps.setString(2, question.getEnonce());
             
             List<String> choix = question.getChoix();
+            if (choix == null || choix.size() != 4) {
+                throw new IllegalArgumentException("Question must have exactly 4 choices");
+            }
+            
             ps.setString(3, choix.get(0));
             ps.setString(4, choix.get(1));
             ps.setString(5, choix.get(2));

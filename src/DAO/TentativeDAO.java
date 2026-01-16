@@ -2,11 +2,15 @@ package DAO;
 
 import java.sql.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import metier.Tentative;
 import metier.Utilisateur;
 import metier.Quiz;
 
 public class TentativeDAO {
+    
+    private static final Logger logger = Logger.getLogger(TentativeDAO.class.getName());
 
     public void save(Tentative tentative) {
         String sql = "INSERT INTO tentative (etudiant_id, quiz_id, score) VALUES (?, ?, ?)";
@@ -19,8 +23,8 @@ public class TentativeDAO {
             ps.setInt(3, tentative.getScore());
             ps.executeUpdate();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error saving tentative", e);
         }
     }
 
@@ -50,8 +54,8 @@ public class TentativeDAO {
                 tentatives.add(tentative);
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error finding tentatives by etudiant", e);
         }
 
         return tentatives;
@@ -83,8 +87,8 @@ public class TentativeDAO {
                 tentatives.add(tentative);
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error finding tentatives by quiz", e);
         }
 
         return tentatives;
