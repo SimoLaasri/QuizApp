@@ -26,7 +26,7 @@ private void chargerQuizzes() {
     comboQuiz.removeAllItems();
 
     QuizDAO quizDAO = new QuizDAO();
-    List<Quiz> quizzes = quizDAO.findAll();
+    List<Quiz> quizzes = quizDAO.recupererListQuiz();
 
     for (Quiz quiz : quizzes) {
         comboQuiz.addItem(quiz.getTitre());

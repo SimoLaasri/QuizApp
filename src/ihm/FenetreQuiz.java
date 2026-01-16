@@ -129,7 +129,7 @@ private void chargerQuestions() {
     QuizDAO quizDAO = new QuizDAO();
     Quiz quizTrouve = null;
 
-    for (Quiz q : quizDAO.findAll()) {
+    for (Quiz q : quizDAO.recupererListQuiz()) {
         if (q.getTitre().equals(titreQuiz)) {
             quizTrouve = q;
             break;
