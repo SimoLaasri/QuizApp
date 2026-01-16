@@ -42,7 +42,7 @@ public class TentativeDAO {
             while (rs.next()) {
                 Utilisateur etudiant = new Utilisateur();
                 etudiant.setId(rs.getInt("uid"));
-                etudiant.setUsername(rs.getString("username"));
+                etudiant.setLogin(rs.getString("username"));
 
                 Quiz quiz = new Quiz(rs.getInt("qid"), rs.getString("titre"));
 
@@ -75,7 +75,7 @@ public class TentativeDAO {
             while (rs.next()) {
                 Utilisateur etudiant = new Utilisateur();
                 etudiant.setId(rs.getInt("uid"));
-                etudiant.setUsername(rs.getString("username"));
+                etudiant.setLogin(rs.getString("username"));
 
                 Quiz quiz = new Quiz(rs.getInt("qid"), rs.getString("titre"));
 
