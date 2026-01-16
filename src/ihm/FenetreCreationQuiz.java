@@ -4,6 +4,15 @@
  */
 package ihm;
 
+import DAO.QuizDAO;
+import DAO.QuestionDAO;
+import metier.Quiz;
+import metier.Question;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Mara
@@ -11,12 +20,17 @@ package ihm;
 public class FenetreCreationQuiz extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FenetreCreationQuiz.class.getName());
+    private List<Question> questionsAjoutees;
+    private DefaultListModel<String> listModel;
 
     /**
      * Creates new form FenetreCreationQuiz
      */
     public FenetreCreationQuiz() {
         initComponents();
+        questionsAjoutees = new ArrayList<>();
+        listModel = new DefaultListModel<>();
+        listQuestions.setModel(listModel);
     }
 
     /**
@@ -29,31 +43,196 @@ public class FenetreCreationQuiz extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txtTitreQuiz = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        txtEnonce = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        txtChoixA = new javax.swing.JTextField();
+        txtChoixB = new javax.swing.JTextField();
+        txtChoixC = new javax.swing.JTextField();
+        txtChoixD = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        comboBonneReponse = new javax.swing.JComboBox<>();
+        btnAjouterQuestion = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        listQuestions = new javax.swing.JList<>();
+        btnEnregistrerQuiz = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Création de Quiz");
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Créer un Quiz");
+
+        jLabel2.setText("Titre du Quiz:");
+
+        jLabel3.setText("Question:");
+
+        jLabel4.setText("Réponses (A, B, C, D):");
+
+        jLabel5.setText("Bonne Réponse:");
+
+        comboBonneReponse.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A", "B", "C", "D" }));
+
+        btnAjouterQuestion.setText("Ajouter Question");
+        btnAjouterQuestion.addActionListener(this::btnAjouterQuestionActionPerformed);
+
+        jScrollPane1.setViewportView(listQuestions);
+
+        btnEnregistrerQuiz.setText("Enregistrer Quiz");
+        btnEnregistrerQuiz.addActionListener(this::btnEnregistrerQuizActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(106, 106, 106)
-                .addComponent(jLabel1)
-                .addContainerGap(222, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(txtTitreQuiz)
+                    .addComponent(txtEnonce)
+                    .addComponent(txtChoixA)
+                    .addComponent(txtChoixB)
+                    .addComponent(txtChoixC)
+                    .addComponent(txtChoixD)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(comboBonneReponse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 182, Short.MAX_VALUE)
+                        .addComponent(btnAjouterQuestion))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnEnregistrerQuiz)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(53, 53, 53)
+                .addContainerGap()
                 .addComponent(jLabel1)
-                .addContainerGap(231, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtTitreQuiz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtEnonce, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtChoixA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtChoixB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtChoixC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtChoixD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(comboBonneReponse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAjouterQuestion))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnEnregistrerQuiz)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAjouterQuestionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjouterQuestionActionPerformed
+        String enonce = txtEnonce.getText().trim();
+        String choixA = txtChoixA.getText().trim();
+        String choixB = txtChoixB.getText().trim();
+        String choixC = txtChoixC.getText().trim();
+        String choixD = txtChoixD.getText().trim();
+        
+        if (enonce.isEmpty() || choixA.isEmpty() || choixB.isEmpty() || 
+            choixC.isEmpty() || choixD.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Veuillez remplir tous les champs de la question", 
+                "Erreur", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        List<String> choix = new ArrayList<>();
+        choix.add(choixA);
+        choix.add(choixB);
+        choix.add(choixC);
+        choix.add(choixD);
+        
+        int bonneReponse = comboBonneReponse.getSelectedIndex();
+        
+        Question question = new Question(0, enonce, choix, bonneReponse);
+        questionsAjoutees.add(question);
+        
+        listModel.addElement((questionsAjoutees.size()) + ". " + enonce);
+        
+        // Clear fields
+        txtEnonce.setText("");
+        txtChoixA.setText("");
+        txtChoixB.setText("");
+        txtChoixC.setText("");
+        txtChoixD.setText("");
+        comboBonneReponse.setSelectedIndex(0);
+    }//GEN-LAST:event_btnAjouterQuestionActionPerformed
+
+    private void btnEnregistrerQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnregistrerQuizActionPerformed
+        String titreQuiz = txtTitreQuiz.getText().trim();
+        
+        if (titreQuiz.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Veuillez saisir un titre pour le quiz", 
+                "Erreur", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (questionsAjoutees.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Veuillez ajouter au moins une question", 
+                "Erreur", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        Quiz quiz = new Quiz(0, titreQuiz);
+        QuizDAO quizDAO = new QuizDAO();
+        int quizId = quizDAO.save(quiz);
+        
+        if (quizId > 0) {
+            QuestionDAO questionDAO = new QuestionDAO();
+            for (Question question : questionsAjoutees) {
+                questionDAO.save(question, quizId);
+            }
+            
+            JOptionPane.showMessageDialog(this, 
+                "Quiz créé avec succès!", 
+                "Succès", 
+                JOptionPane.INFORMATION_MESSAGE);
+            
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "Erreur lors de la création du quiz", 
+                "Erreur", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEnregistrerQuizActionPerformed
 
     /**
      * @param args the command line arguments
@@ -81,6 +260,21 @@ public class FenetreCreationQuiz extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAjouterQuestion;
+    private javax.swing.JButton btnEnregistrerQuiz;
+    private javax.swing.JComboBox<String> comboBonneReponse;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList<String> listQuestions;
+    private javax.swing.JTextField txtChoixA;
+    private javax.swing.JTextField txtChoixB;
+    private javax.swing.JTextField txtChoixC;
+    private javax.swing.JTextField txtChoixD;
+    private javax.swing.JTextField txtEnonce;
+    private javax.swing.JTextField txtTitreQuiz;
     // End of variables declaration//GEN-END:variables
 }
