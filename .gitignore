@@ -19,7 +19,6 @@ buildNumber.properties
 
 # NetBeans project files
 /nbproject/private/
-nb-configuration.xml
 nbactions*.xml
 
 # IDE files
