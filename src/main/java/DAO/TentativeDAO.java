@@ -34,6 +34,8 @@ public class TentativeDAO {
 
     public List<Tentative> recupererListTentativeParEtudiant(int etudiantId) {
         List<Tentative> tentatives = new ArrayList<>();
+        DAO.QuestionDAO questionDAO = new DAO.QuestionDAO();
+        
         try {
             String request = "SELECT t.*, u.id as uid, u.username, u.nom, u.prenom, u.role, " +
                            "q.id as qid, q.titre " +
@@ -42,8 +44,6 @@ public class TentativeDAO {
                            "JOIN quiz q ON t.quiz_id = q.id " +
                            "WHERE t.etudiant_id = "+etudiantId;
             ResultSet rs = stmt.executeQuery(request);
-
-            DAO.QuestionDAO questionDAO = new DAO.QuestionDAO();
             
             while (rs.next()) {
                 Utilisateur etudiant = new Utilisateur();
@@ -70,6 +70,8 @@ public class TentativeDAO {
 
     public List<Tentative> recupererListTentativeParQuiz(int quizId) {
         List<Tentative> tentatives = new ArrayList<>();
+        DAO.QuestionDAO questionDAO = new DAO.QuestionDAO();
+        
         try {
             String request = "SELECT t.*, u.id as uid, u.username, u.nom, u.prenom, u.role, " +
                            "q.id as qid, q.titre " +
@@ -78,8 +80,6 @@ public class TentativeDAO {
                            "JOIN quiz q ON t.quiz_id = q.id " +
                            "WHERE t.quiz_id = "+quizId;
             ResultSet rs = stmt.executeQuery(request);
-
-            DAO.QuestionDAO questionDAO = new DAO.QuestionDAO();
             
             while (rs.next()) {
                 Utilisateur etudiant = new Utilisateur();
@@ -106,6 +106,8 @@ public class TentativeDAO {
 
     public List<Tentative> recupererToutesTentatives() {
         List<Tentative> tentatives = new ArrayList<>();
+        DAO.QuestionDAO questionDAO = new DAO.QuestionDAO();
+        
         try {
             String request = "SELECT t.*, u.id as uid, u.username, u.nom, u.prenom, u.role, " +
                            "q.id as qid, q.titre " +
@@ -113,8 +115,6 @@ public class TentativeDAO {
                            "JOIN utilisateur u ON t.etudiant_id = u.id " +
                            "JOIN quiz q ON t.quiz_id = q.id";
             ResultSet rs = stmt.executeQuery(request);
-
-            DAO.QuestionDAO questionDAO = new DAO.QuestionDAO();
             
             while (rs.next()) {
                 Utilisateur etudiant = new Utilisateur();
