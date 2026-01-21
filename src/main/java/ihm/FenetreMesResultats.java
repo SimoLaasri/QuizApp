@@ -50,6 +50,7 @@ public class FenetreMesResultats extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tableResultats = new javax.swing.JTable();
         btnActualiser = new javax.swing.JButton();
+        btnRetour = new javax.swing.JButton();
         btnFermer = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -58,22 +59,40 @@ public class FenetreMesResultats extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Mes Résultats");
 
+        tableResultats.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         tableResultats.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+
             },
             new String [] {
-                "Quiz", "Score"
+                "Quiz", "Score", "Date"
             }
-        ));
-        jScrollPane1.setViewportView(tableResultats);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
 
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tableResultats.setRowHeight(25);
+        jScrollPane1.setViewportView(tableResultats);
+        if (tableResultats.getColumnModel().getColumnCount() > 0) {
+            tableResultats.getColumnModel().getColumn(0).setPreferredWidth(200);
+            tableResultats.getColumnModel().getColumn(1).setPreferredWidth(80);
+            tableResultats.getColumnModel().getColumn(2).setPreferredWidth(120);
+        }
+
+        btnActualiser.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnActualiser.setText("Actualiser");
         btnActualiser.addActionListener(this::btnActualiserActionPerformed);
 
+        btnRetour.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnRetour.setText("Retour");
+        btnRetour.addActionListener(this::btnRetourActionPerformed);
+
+        btnFermer.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnFermer.setText("Fermer");
         btnFermer.addActionListener(this::btnFermerActionPerformed);
 
@@ -82,32 +101,33 @@ public class FenetreMesResultats extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(150, 150, 150)
-                        .addComponent(jLabel1))
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(90, 90, 90)
-                        .addComponent(btnActualiser)
+                        .addComponent(btnRetour, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnActualiser, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnFermer)))
-                .addContainerGap(30, Short.MAX_VALUE))
+                        .addComponent(btnFermer, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnActualiser)
-                    .addComponent(btnFermer))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(btnActualiser, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnFermer, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRetour, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         pack();
@@ -120,6 +140,11 @@ public class FenetreMesResultats extends javax.swing.JFrame {
     private void btnFermerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFermerActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnFermerActionPerformed
+
+    private void btnRetourActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetourActionPerformed
+        new FenetreEtudiant(utilisateurConnecte).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnRetourActionPerformed
 
     /**
      * @param args the command line arguments
@@ -149,6 +174,7 @@ public class FenetreMesResultats extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualiser;
     private javax.swing.JButton btnFermer;
+    private javax.swing.JButton btnRetour;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableResultats;
