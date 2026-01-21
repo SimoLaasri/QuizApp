@@ -4,6 +4,11 @@
  */
 package ihm;
 
+import DAO.TentativeDAO;
+import metier.Tentative;
+import model.ResultatTableModel;
+import java.util.List;
+
 /**
  *
  * @author Mara
@@ -11,12 +16,26 @@ package ihm;
 public class FenetreResultats extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FenetreResultats.class.getName());
+    private ResultatTableModel resultatTableModel;
 
     /**
      * Creates new form FenetreResultats
      */
     public FenetreResultats() {
         initComponents();
+        resultatTableModel = new ResultatTableModel();
+        tableResultats.setModel(resultatTableModel);
+        chargerResultats();
+    }
+
+    private void chargerResultats() {
+        TentativeDAO tentativeDAO = new TentativeDAO();
+        List<Tentative> tentatives = tentativeDAO.recupererToutesTentatives();
+        resultatTableModel.setItems(tentatives);
+    }
+
+    private void actualiserResultats() {
+        chargerResultats();
     }
 
     /**
@@ -29,31 +48,69 @@ public class FenetreResultats extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tableResultats = new javax.swing.JTable();
+        btnActualiser = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Résultats");
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Résultats des Étudiants");
+
+        tableResultats.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Étudiant", "Quiz", "Score"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tableResultats);
+
+        btnActualiser.setText("Actualiser");
+        btnActualiser.addActionListener(this::btnActualiserActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(96, 96, 96)
-                .addComponent(jLabel1)
-                .addContainerGap(184, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnActualiser)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(65, 65, 65)
-                .addComponent(jLabel1)
-                .addContainerGap(219, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(btnActualiser))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnActualiserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualiserActionPerformed
+        actualiserResultats();
+    }//GEN-LAST:event_btnActualiserActionPerformed
 
     /**
      * @param args the command line arguments
@@ -81,6 +138,9 @@ public class FenetreResultats extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnActualiser;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tableResultats;
     // End of variables declaration//GEN-END:variables
 }

@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 import DAO.QuizDAO;
+import DAO.TentativeDAO;
 import metier.Quiz;
 import metier.Question;
+import metier.Utilisateur;
 /**
  *
  * @author Mara
@@ -22,6 +24,7 @@ public class FenetreQuiz extends javax.swing.JFrame {
     private String titreQuiz;
     private int score = 0;
     private int quizId = -1;
+    private Utilisateur utilisateurConnecte;
 
 private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FenetreQuiz.class.getName());
 
@@ -34,6 +37,15 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
 public FenetreQuiz(String titreQuiz) {
     initComponents();
     this.titreQuiz = titreQuiz;
+
+    labelQuizTitre.setText("Quiz : " + titreQuiz);
+    chargerQuestions();
+    afficherQuestion();
+}
+public FenetreQuiz(String titreQuiz, Utilisateur utilisateur) {
+    this.titreQuiz = titreQuiz;
+    this.utilisateurConnecte = utilisateur;
+    initComponents();
 
     labelQuizTitre.setText("Quiz : " + titreQuiz);
     chargerQuestions();
@@ -183,7 +195,7 @@ radioD.setText(choix.get(3));
 }
 
     private void radioDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioDActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_radioDActionPerformed
 
     private void btnSuivantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuivantActionPerformed
@@ -231,11 +243,11 @@ radioD.setText(choix.get(3));
             javax.swing.JOptionPane.INFORMATION_MESSAGE
         );
         
-        // Note: Saving attempt would require user context
-        // For now, we just show the results
-        // A proper implementation would save using TentativeDAO:
-        // TentativeDAO tentativeDAO = new TentativeDAO();
-        // tentativeDAO.save(new Tentative(currentUser, currentQuiz, score));
+        // Save attempt to database
+        if (utilisateurConnecte != null && quizId > 0) {
+            TentativeDAO tentativeDAO = new TentativeDAO();
+            tentativeDAO.ajouterTentative(utilisateurConnecte.getId(), quizId, score);
+        }
         
         this.dispose();
     }

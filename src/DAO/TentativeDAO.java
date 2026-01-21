@@ -87,4 +87,31 @@ public class TentativeDAO {
         }
         return tentatives;
     }
+
+    public List<Tentative> recupererToutesTentatives() {
+        List<Tentative> tentatives = new ArrayList<>();
+        try {
+            String request = "SELECT t.*, u.id as uid, u.username, u.password, u.nom, u.prenom, u.role, " +
+                           "q.id as qid, q.titre " +
+                           "FROM tentative t " +
+                           "JOIN utilisateur u ON t.etudiant_id = u.id " +
+                           "JOIN quiz q ON t.quiz_id = q.id";
+            ResultSet rs = stmt.executeQuery(request);
+
+            while (rs.next()) {
+                Utilisateur etudiant = new Utilisateur();
+                etudiant.setId(rs.getInt("uid"));
+                etudiant.setLogin(rs.getString("username"));
+
+                Quiz quiz = new Quiz(rs.getInt("qid"), rs.getString("titre"));
+
+                Tentative tentative = new Tentative(etudiant, quiz, rs.getInt("score"));
+                tentatives.add(tentative);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Erreur recupererToutesTentatives");
+            ex.printStackTrace();
+        }
+        return tentatives;
+    }
 }
