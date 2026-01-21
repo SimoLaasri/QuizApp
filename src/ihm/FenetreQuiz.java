@@ -202,7 +202,7 @@ radioD.setText(choix.get(3));
     buttonGroup1.clearSelection();
     
     // Restore previously selected answer if exists
-    if (reponses[indexQuestion] != -1) {
+    if (reponses != null && indexQuestion >= 0 && indexQuestion < reponses.length && reponses[indexQuestion] != -1) {
         switch (reponses[indexQuestion]) {
             case 0: radioA.setSelected(true); break;
             case 1: radioB.setSelected(true); break;
@@ -250,7 +250,7 @@ radioD.setText(choix.get(3));
     }//GEN-LAST:event_btnPrecedentActionPerformed
     
     private void sauvegarderReponse() {
-        if (indexQuestion < questions.size()) {
+        if (indexQuestion >= 0 && indexQuestion < questions.size() && reponses != null && indexQuestion < reponses.length) {
             if (radioA.isSelected()) reponses[indexQuestion] = 0;
             else if (radioB.isSelected()) reponses[indexQuestion] = 1;
             else if (radioC.isSelected()) reponses[indexQuestion] = 2;
