@@ -65,6 +65,10 @@ public class UtilisateurDAO {
      * @param nom Student's last name
      * @param prenom Student's first name
      * @return The ID of the newly created user, or -1 if failed
+     * 
+     * Note: This implementation stores passwords in plain text to maintain 
+     * consistency with the existing authentication method. For production use,
+     * passwords should be hashed using BCrypt or similar secure algorithm.
      */
     public int inscrireEtudiant(String username, String password, String nom, String prenom) {
         int userId = -1;

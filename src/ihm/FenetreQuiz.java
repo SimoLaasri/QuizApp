@@ -19,7 +19,7 @@ import metier.Utilisateur;
 public class FenetreQuiz extends javax.swing.JFrame {
     private static final double PERCENTAGE_MULTIPLIER = 100.0;
     private static final int TIMER_SECONDS_PER_QUESTION = 30; // 30 seconds per question
-    private static final int WARNING_THRESHOLD_SECONDS = 30; // Show warning when 30 seconds remain
+    private static final int WARNING_THRESHOLD_SECONDS = 30; // Show warning when 30 seconds remain in total
     
     private List<Question> questions;
     private int indexQuestion = 0;
@@ -93,7 +93,7 @@ public FenetreQuiz(String titreQuiz, Utilisateur utilisateur) {
         labelQuizTitre.setText("Quiz :  ");
         
         labelTempsRestant.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        labelTempsRestant.setForeground(new java.awt.Color(255, 0, 0));
+        labelTempsRestant.setForeground(new java.awt.Color(0, 102, 204));
         labelTempsRestant.setText("Temps restant: 00:00");
 
         labelQuestion.setText("Question ici ");
@@ -386,9 +386,11 @@ radioD.setText(choix.get(3));
         String texteTimer = String.format("Temps restant: %02d:%02d", minutes, secondes);
         labelTempsRestant.setText(texteTimer);
         
-        // Change color to red when less than 30 seconds
+        // Change color to red when less than or equal to 30 seconds remain
         if (tempsRestantSecondes <= WARNING_THRESHOLD_SECONDS) {
             labelTempsRestant.setForeground(new java.awt.Color(255, 0, 0));
+        } else {
+            labelTempsRestant.setForeground(new java.awt.Color(0, 102, 204));
         }
     }
 
