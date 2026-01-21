@@ -327,6 +327,10 @@ radioD.setText(choix.get(3));
             tentativeDAO.ajouterTentative(utilisateurConnecte.getId(), quizId, score);
         }
         
+        // Return to student screen after quiz completion
+        if (utilisateurConnecte != null) {
+            new FenetreEtudiant(utilisateurConnecte).setVisible(true);
+        }
         this.dispose();
     }
 

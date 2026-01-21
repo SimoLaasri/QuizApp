@@ -48,6 +48,7 @@ public class FenetreListeQuiz extends javax.swing.JFrame {
         tableQuizzes = new javax.swing.JTable();
         btnSupprimer = new javax.swing.JButton();
         btnModifier = new javax.swing.JButton();
+        btnAjouterQuestions = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Liste des Quiz");
@@ -82,6 +83,10 @@ public class FenetreListeQuiz extends javax.swing.JFrame {
         btnModifier.setEnabled(false);
         btnModifier.addActionListener(this::btnModifierActionPerformed);
 
+        btnAjouterQuestions.setText("Ajouter Questions");
+        btnAjouterQuestions.setEnabled(false);
+        btnAjouterQuestions.addActionListener(this::btnAjouterQuestionsActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -95,6 +100,8 @@ public class FenetreListeQuiz extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnAjouterQuestions)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnModifier)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSupprimer)))
@@ -110,7 +117,8 @@ public class FenetreListeQuiz extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSupprimer)
-                    .addComponent(btnModifier))
+                    .addComponent(btnModifier)
+                    .addComponent(btnAjouterQuestions))
                 .addContainerGap())
         );
 
@@ -121,6 +129,7 @@ public class FenetreListeQuiz extends javax.swing.JFrame {
         boolean hasSelection = tableQuizzes.getSelectedRow() != -1;
         btnSupprimer.setEnabled(hasSelection);
         btnModifier.setEnabled(hasSelection);
+        btnAjouterQuestions.setEnabled(hasSelection);
     }
 
     private void btnSupprimerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupprimerActionPerformed
@@ -199,6 +208,91 @@ public class FenetreListeQuiz extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnModifierActionPerformed
 
+    private void btnAjouterQuestionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjouterQuestionsActionPerformed
+        int selectedRow = tableQuizzes.getSelectedRow();
+        if (selectedRow == -1) {
+            return;
+        }
+
+        Quiz quizSelectionne = quizTableModel.getQuizAt(selectedRow);
+        
+        // Show dialog to add a question
+        javax.swing.JPanel panel = new javax.swing.JPanel(new java.awt.GridLayout(0, 1, 5, 5));
+        
+        javax.swing.JTextField txtEnonce = new javax.swing.JTextField(30);
+        javax.swing.JTextField txtChoixA = new javax.swing.JTextField(30);
+        javax.swing.JTextField txtChoixB = new javax.swing.JTextField(30);
+        javax.swing.JTextField txtChoixC = new javax.swing.JTextField(30);
+        javax.swing.JTextField txtChoixD = new javax.swing.JTextField(30);
+        
+        String[] reponseOptions = {"A", "B", "C", "D"};
+        javax.swing.JComboBox<String> cmbBonneReponse = new javax.swing.JComboBox<>(reponseOptions);
+        
+        panel.add(new javax.swing.JLabel("Énoncé de la question:"));
+        panel.add(txtEnonce);
+        panel.add(new javax.swing.JLabel("Choix A:"));
+        panel.add(txtChoixA);
+        panel.add(new javax.swing.JLabel("Choix B:"));
+        panel.add(txtChoixB);
+        panel.add(new javax.swing.JLabel("Choix C:"));
+        panel.add(txtChoixC);
+        panel.add(new javax.swing.JLabel("Choix D:"));
+        panel.add(txtChoixD);
+        panel.add(new javax.swing.JLabel("Bonne réponse:"));
+        panel.add(cmbBonneReponse);
+        
+        int result = javax.swing.JOptionPane.showConfirmDialog(
+            this,
+            panel,
+            "Ajouter une question au quiz \"" + quizSelectionne.getTitre() + "\"",
+            javax.swing.JOptionPane.OK_CANCEL_OPTION,
+            javax.swing.JOptionPane.PLAIN_MESSAGE
+        );
+        
+        if (result == javax.swing.JOptionPane.OK_OPTION) {
+            String enonce = txtEnonce.getText().trim();
+            String choixA = txtChoixA.getText().trim();
+            String choixB = txtChoixB.getText().trim();
+            String choixC = txtChoixC.getText().trim();
+            String choixD = txtChoixD.getText().trim();
+            
+            if (enonce.isEmpty() || choixA.isEmpty() || choixB.isEmpty() || 
+                choixC.isEmpty() || choixD.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Tous les champs doivent être remplis!",
+                    "Erreur",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+            
+            int bonneReponse = cmbBonneReponse.getSelectedIndex();
+            
+            DAO.QuestionDAO questionDAO = new DAO.QuestionDAO();
+            int resultatAjout = questionDAO.ajouterQuestion(
+                enonce, choixA, choixB, choixC, choixD, bonneReponse, quizSelectionne.getId()
+            );
+            
+            if (resultatAjout > 0) {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Question ajoutée avec succès!",
+                    "Succès",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+                );
+                chargerQuizzes(); // Refresh the table to show updated question count
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Erreur lors de l'ajout de la question",
+                    "Erreur",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
+    }//GEN-LAST:event_btnAjouterQuestionsActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -225,6 +319,7 @@ public class FenetreListeQuiz extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAjouterQuestions;
     private javax.swing.JButton btnModifier;
     private javax.swing.JButton btnSupprimer;
     private javax.swing.JLabel jLabel1;

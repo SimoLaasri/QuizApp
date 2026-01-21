@@ -44,7 +44,8 @@ public class MesResultatsTableModel extends AbstractTableModel {
             case COLUMN_QUIZ:
                 return tentative.getQuiz().getTitre();
             case COLUMN_SCORE:
-                return tentative.getScore();
+                int totalQuestions = tentative.getQuiz().getQuestions().size();
+                return tentative.getScore() + "/" + totalQuestions;
             default:
                 return null;
         }

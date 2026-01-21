@@ -43,12 +43,20 @@ public class TentativeDAO {
                            "WHERE t.etudiant_id = "+etudiantId;
             ResultSet rs = stmt.executeQuery(request);
 
+            DAO.QuestionDAO questionDAO = new DAO.QuestionDAO();
+            
             while (rs.next()) {
                 Utilisateur etudiant = new Utilisateur();
                 etudiant.setId(rs.getInt("uid"));
                 etudiant.setLogin(rs.getString("username"));
 
                 Quiz quiz = new Quiz(rs.getInt("qid"), rs.getString("titre"));
+                
+                // Load questions for this quiz to get the total count
+                List<metier.Question> questions = questionDAO.recupererListQuestionParQuiz(quiz.getId());
+                for (metier.Question q : questions) {
+                    quiz.ajouterQuestion(q);
+                }
 
                 Tentative tentative = new Tentative(etudiant, quiz, rs.getInt("score"));
                 tentatives.add(tentative);
@@ -71,12 +79,20 @@ public class TentativeDAO {
                            "WHERE t.quiz_id = "+quizId;
             ResultSet rs = stmt.executeQuery(request);
 
+            DAO.QuestionDAO questionDAO = new DAO.QuestionDAO();
+            
             while (rs.next()) {
                 Utilisateur etudiant = new Utilisateur();
                 etudiant.setId(rs.getInt("uid"));
                 etudiant.setLogin(rs.getString("username"));
 
                 Quiz quiz = new Quiz(rs.getInt("qid"), rs.getString("titre"));
+                
+                // Load questions for this quiz to get the total count
+                List<metier.Question> questions = questionDAO.recupererListQuestionParQuiz(quiz.getId());
+                for (metier.Question q : questions) {
+                    quiz.ajouterQuestion(q);
+                }
 
                 Tentative tentative = new Tentative(etudiant, quiz, rs.getInt("score"));
                 tentatives.add(tentative);
@@ -98,12 +114,20 @@ public class TentativeDAO {
                            "JOIN quiz q ON t.quiz_id = q.id";
             ResultSet rs = stmt.executeQuery(request);
 
+            DAO.QuestionDAO questionDAO = new DAO.QuestionDAO();
+            
             while (rs.next()) {
                 Utilisateur etudiant = new Utilisateur();
                 etudiant.setId(rs.getInt("uid"));
                 etudiant.setLogin(rs.getString("username"));
 
                 Quiz quiz = new Quiz(rs.getInt("qid"), rs.getString("titre"));
+                
+                // Load questions for this quiz to get the total count
+                List<metier.Question> questions = questionDAO.recupererListQuestionParQuiz(quiz.getId());
+                for (metier.Question q : questions) {
+                    quiz.ajouterQuestion(q);
+                }
 
                 Tentative tentative = new Tentative(etudiant, quiz, rs.getInt("score"));
                 tentatives.add(tentative);
