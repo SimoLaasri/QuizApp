@@ -9,7 +9,7 @@ QuizApp is a Java Swing desktop application for creating and taking quizzes, des
 - **GUI Framework**: Java Swing
 - **Database**: MySQL 5.7 or higher
 - **Build Tool**: Apache Ant (NetBeans project)
-- **JDBC Driver**: mysql-connector-j-9.0.0.jar (located in `lib/` directory)
+- **JDBC Driver**: mysql-connector-j-9.0.0.jar (referenced in `nbproject/project.properties`, should be placed in `lib/` directory if not present)
 
 ## Build and Development Instructions
 
@@ -98,7 +98,7 @@ Student Account:
 
 **Issue 2: Missing JDBC Driver**
 - **Error:** `java.lang.ClassNotFoundException: com.mysql.cj.jdbc.Driver`
-- **Solution:** Ensure `lib/mysql-connector-j-9.0.0.jar` exists and is included in the classpath (defined in `nbproject/project.properties`)
+- **Solution:** The `lib/` directory is not in the repository. Create it and download the MySQL Connector/J 9.0.0 JAR file from MySQL's website, or use Maven/manual download. The classpath reference is in `nbproject/project.properties`: `file.reference.mysql-connector-j-9.0.0.jar=lib/mysql-connector-j-9.0.0.jar`
 
 **Issue 3: Database Does Not Exist**
 - **Error:** `Unknown database 'quizapp'`
@@ -113,8 +113,8 @@ QuizApp/
 ├── .github/                    # GitHub configuration (Copilot instructions)
 ├── build/                      # Build output (generated, not in Git)
 ├── dist/                       # Distribution JAR (generated, not in Git)
-├── lib/                        # External libraries
-│   └── mysql-connector-j-9.0.0.jar  # MySQL JDBC driver
+├── lib/                        # External libraries (not in repository)
+│   └── mysql-connector-j-9.0.0.jar  # MySQL JDBC driver (must be added manually or downloaded)
 ├── database/
 │   └── schema.sql             # Database schema and sample data
 ├── nbproject/                 # NetBeans project configuration
@@ -140,7 +140,10 @@ QuizApp/
 │   │   ├── FenetreEnseignant.java   # Teacher dashboard
 │   │   ├── FenetreQuiz.java         # Quiz taking interface
 │   │   ├── FenetreCreationQuiz.java # Quiz creation interface
-│   │   └── FenetreListeQuiz.java    # Quiz list view
+│   │   ├── FenetreListeQuiz.java    # Quiz list view
+│   │   ├── FenetreMesResultats.java # Student's own results view
+│   │   ├── FenetreResultats.java    # Results display window
+│   │   └── *.form files             # NetBeans GUI Builder form files
 │   ├── model/                 # (May contain additional model classes)
 │   └── quizapp/
 │       └── QuizApp.java       # Main entry point (launches FenetreLogin)
@@ -189,7 +192,7 @@ The application follows a three-tier architecture:
 - `quiz` - Quizzes
   - Fields: id, titre
 - `question` - Questions for each quiz
-  - Fields: id, quiz_id (FK), enonce, choixA-D, bonneReponse (0-3)
+  - Fields: id, quiz_id (FK), enonce, choixA-D, bonneReponse (INT representing answer index: 0=A, 1=B, 2=C, 3=D)
 - `tentative` - Quiz attempts/results
   - Fields: id, etudiant_id (FK), quiz_id (FK), score, date_tentative
 
