@@ -52,6 +52,7 @@ private void chargerQuizzes() {
 
         jLabel1 = new javax.swing.JLabel();
         jButtonCommencerQuiz = new javax.swing.JButton();
+        jButtonMesResultats = new javax.swing.JButton();
         jButtonDeconnexion = new javax.swing.JButton();
         comboQuiz = new javax.swing.JComboBox<>();
 
@@ -63,6 +64,9 @@ private void chargerQuizzes() {
 
         jButtonCommencerQuiz.setText("Commencer le Quiz");
         jButtonCommencerQuiz.addActionListener(this::jButtonCommencerQuizActionPerformed);
+
+        jButtonMesResultats.setText("Mes Résultats");
+        jButtonMesResultats.addActionListener(this::jButtonMesResultatsActionPerformed);
 
         jButtonDeconnexion.setText("Déconnexion");
         jButtonDeconnexion.addActionListener(this::jButtonDeconnexionActionPerformed);
@@ -84,6 +88,9 @@ private void chargerQuizzes() {
                         .addGap(127, 127, 127)
                         .addComponent(jButtonCommencerQuiz))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(142, 142, 142)
+                        .addComponent(jButtonMesResultats))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(161, 161, 161)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButtonDeconnexion)
@@ -99,7 +106,9 @@ private void chargerQuizzes() {
                 .addComponent(jButtonCommencerQuiz)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(comboQuiz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonMesResultats)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addComponent(jButtonDeconnexion)
                 .addGap(45, 45, 45))
         );
@@ -126,6 +135,10 @@ this.dispose();
     private void comboQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboQuizActionPerformed
         
     }//GEN-LAST:event_comboQuizActionPerformed
+
+    private void jButtonMesResultatsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMesResultatsActionPerformed
+        new FenetreMesResultats(utilisateurConnecte).setVisible(true);
+    }//GEN-LAST:event_jButtonMesResultatsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -156,6 +169,7 @@ this.dispose();
     private javax.swing.JComboBox<String> comboQuiz;
     private javax.swing.JButton jButtonCommencerQuiz;
     private javax.swing.JButton jButtonDeconnexion;
+    private javax.swing.JButton jButtonMesResultats;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
