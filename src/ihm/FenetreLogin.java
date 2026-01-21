@@ -118,7 +118,7 @@ public class FenetreLogin extends javax.swing.JFrame {
 
     // 🎯 Role-based navigation
     if (utilisateur.getRole() == RoleUtilisateur.ETUDIANT) {
-        new FenetreEtudiant().setVisible(true);
+        new FenetreEtudiant(utilisateur).setVisible(true);
 
     } else if (utilisateur.getRole() == RoleUtilisateur.ENSEIGNANT) {
         new FenetreEnseignant().setVisible(true);

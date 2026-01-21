@@ -5,6 +5,7 @@
 package ihm;
 import DAO.QuizDAO;
 import metier.Quiz;
+import metier.Utilisateur;
 import java.util.List;
 
 /**
@@ -14,11 +15,18 @@ import java.util.List;
 public class FenetreEtudiant extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FenetreEtudiant.class.getName());
+    private Utilisateur utilisateurConnecte;
 
     /**
      * Creates new form FenetreEtudiant
      */
     public FenetreEtudiant() {
+        initComponents();
+        chargerQuizzes();
+    }
+
+    public FenetreEtudiant(Utilisateur utilisateur) {
+        this.utilisateurConnecte = utilisateur;
         initComponents();
         chargerQuizzes();
     }
@@ -102,7 +110,7 @@ private void chargerQuizzes() {
     private void jButtonCommencerQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCommencerQuizActionPerformed
          String titreQuiz = comboQuiz.getSelectedItem().toString();
 
-    FenetreQuiz fenetreQuiz = new FenetreQuiz(titreQuiz);
+    FenetreQuiz fenetreQuiz = new FenetreQuiz(titreQuiz, utilisateurConnecte);
     fenetreQuiz.setVisible(true);
 
     this.dispose();
@@ -116,7 +124,7 @@ this.dispose();
     }//GEN-LAST:event_jButtonDeconnexionActionPerformed
 
     private void comboQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboQuizActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_comboQuizActionPerformed
 
     /**

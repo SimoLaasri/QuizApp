@@ -57,6 +57,7 @@ public class FenetreCreationQuiz extends javax.swing.JFrame {
         btnAjouterQuestion = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         listQuestions = new javax.swing.JList<>();
+        btnSupprimerQuestion = new javax.swing.JButton();
         btnEnregistrerQuiz = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -79,6 +80,9 @@ public class FenetreCreationQuiz extends javax.swing.JFrame {
         btnAjouterQuestion.addActionListener(this::btnAjouterQuestionActionPerformed);
 
         jScrollPane1.setViewportView(listQuestions);
+
+        btnSupprimerQuestion.setText("Supprimer Question");
+        btnSupprimerQuestion.addActionListener(this::btnSupprimerQuestionActionPerformed);
 
         btnEnregistrerQuiz.setText("Enregistrer Quiz");
         btnEnregistrerQuiz.addActionListener(this::btnEnregistrerQuizActionPerformed);
@@ -111,6 +115,8 @@ public class FenetreCreationQuiz extends javax.swing.JFrame {
                         .addComponent(btnAjouterQuestion))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnSupprimerQuestion)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEnregistrerQuiz)))
                 .addContainerGap())
         );
@@ -146,7 +152,9 @@ public class FenetreCreationQuiz extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnEnregistrerQuiz)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEnregistrerQuiz)
+                    .addComponent(btnSupprimerQuestion))
                 .addContainerGap())
         );
 
@@ -242,6 +250,37 @@ public class FenetreCreationQuiz extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEnregistrerQuizActionPerformed
 
+    private void btnSupprimerQuestionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupprimerQuestionActionPerformed
+        int selectedIndex = listQuestions.getSelectedIndex();
+        
+        if (selectedIndex == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Veuillez sélectionner une question à supprimer", 
+                "Aucune sélection", 
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        int confirmation = javax.swing.JOptionPane.showConfirmDialog(
+            this,
+            "Êtes-vous sûr de vouloir supprimer cette question ?",
+            "Confirmation de suppression",
+            javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.WARNING_MESSAGE
+        );
+        
+        if (confirmation == javax.swing.JOptionPane.YES_OPTION) {
+            questionsAjoutees.remove(selectedIndex);
+            listModel.remove(selectedIndex);
+            
+            // Renumber remaining questions in the list
+            for (int i = 0; i < questionsAjoutees.size(); i++) {
+                Question q = questionsAjoutees.get(i);
+                listModel.setElementAt((i + 1) + ". " + q.getEnonce(), i);
+            }
+        }
+    }//GEN-LAST:event_btnSupprimerQuestionActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -270,6 +309,7 @@ public class FenetreCreationQuiz extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAjouterQuestion;
     private javax.swing.JButton btnEnregistrerQuiz;
+    private javax.swing.JButton btnSupprimerQuestion;
     private javax.swing.JComboBox<String> comboBonneReponse;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
