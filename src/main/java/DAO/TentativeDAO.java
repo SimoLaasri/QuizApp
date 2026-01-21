@@ -34,6 +34,8 @@ public class TentativeDAO {
 
     public List<Tentative> recupererListTentativeParEtudiant(int etudiantId) {
         List<Tentative> tentatives = new ArrayList<>();
+        DAO.QuestionDAO questionDAO = new DAO.QuestionDAO();
+        
         try {
             String request = "SELECT t.*, u.id as uid, u.username, u.nom, u.prenom, u.role, " +
                            "q.id as qid, q.titre " +
@@ -42,13 +44,19 @@ public class TentativeDAO {
                            "JOIN quiz q ON t.quiz_id = q.id " +
                            "WHERE t.etudiant_id = "+etudiantId;
             ResultSet rs = stmt.executeQuery(request);
-
+            
             while (rs.next()) {
                 Utilisateur etudiant = new Utilisateur();
                 etudiant.setId(rs.getInt("uid"));
                 etudiant.setLogin(rs.getString("username"));
 
                 Quiz quiz = new Quiz(rs.getInt("qid"), rs.getString("titre"));
+                
+                // Load questions for this quiz to get the total count
+                List<metier.Question> questions = questionDAO.recupererListQuestionParQuiz(quiz.getId());
+                for (metier.Question q : questions) {
+                    quiz.ajouterQuestion(q);
+                }
 
                 Tentative tentative = new Tentative(etudiant, quiz, rs.getInt("score"));
                 tentatives.add(tentative);
@@ -62,6 +70,8 @@ public class TentativeDAO {
 
     public List<Tentative> recupererListTentativeParQuiz(int quizId) {
         List<Tentative> tentatives = new ArrayList<>();
+        DAO.QuestionDAO questionDAO = new DAO.QuestionDAO();
+        
         try {
             String request = "SELECT t.*, u.id as uid, u.username, u.nom, u.prenom, u.role, " +
                            "q.id as qid, q.titre " +
@@ -70,13 +80,19 @@ public class TentativeDAO {
                            "JOIN quiz q ON t.quiz_id = q.id " +
                            "WHERE t.quiz_id = "+quizId;
             ResultSet rs = stmt.executeQuery(request);
-
+            
             while (rs.next()) {
                 Utilisateur etudiant = new Utilisateur();
                 etudiant.setId(rs.getInt("uid"));
                 etudiant.setLogin(rs.getString("username"));
 
                 Quiz quiz = new Quiz(rs.getInt("qid"), rs.getString("titre"));
+                
+                // Load questions for this quiz to get the total count
+                List<metier.Question> questions = questionDAO.recupererListQuestionParQuiz(quiz.getId());
+                for (metier.Question q : questions) {
+                    quiz.ajouterQuestion(q);
+                }
 
                 Tentative tentative = new Tentative(etudiant, quiz, rs.getInt("score"));
                 tentatives.add(tentative);
@@ -90,6 +106,8 @@ public class TentativeDAO {
 
     public List<Tentative> recupererToutesTentatives() {
         List<Tentative> tentatives = new ArrayList<>();
+        DAO.QuestionDAO questionDAO = new DAO.QuestionDAO();
+        
         try {
             String request = "SELECT t.*, u.id as uid, u.username, u.nom, u.prenom, u.role, " +
                            "q.id as qid, q.titre " +
@@ -97,13 +115,19 @@ public class TentativeDAO {
                            "JOIN utilisateur u ON t.etudiant_id = u.id " +
                            "JOIN quiz q ON t.quiz_id = q.id";
             ResultSet rs = stmt.executeQuery(request);
-
+            
             while (rs.next()) {
                 Utilisateur etudiant = new Utilisateur();
                 etudiant.setId(rs.getInt("uid"));
                 etudiant.setLogin(rs.getString("username"));
 
                 Quiz quiz = new Quiz(rs.getInt("qid"), rs.getString("titre"));
+                
+                // Load questions for this quiz to get the total count
+                List<metier.Question> questions = questionDAO.recupererListQuestionParQuiz(quiz.getId());
+                for (metier.Question q : questions) {
+                    quiz.ajouterQuestion(q);
+                }
 
                 Tentative tentative = new Tentative(etudiant, quiz, rs.getInt("score"));
                 tentatives.add(tentative);
