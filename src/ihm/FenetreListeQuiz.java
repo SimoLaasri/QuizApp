@@ -46,6 +46,8 @@ public class FenetreListeQuiz extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableQuizzes = new javax.swing.JTable();
+        btnSupprimer = new javax.swing.JButton();
+        btnModifier = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Liste des Quiz");
@@ -69,7 +71,16 @@ public class FenetreListeQuiz extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tableQuizzes.getSelectionModel().addListSelectionListener(this::tableSelectionChanged);
         jScrollPane1.setViewportView(tableQuizzes);
+
+        btnSupprimer.setText("Supprimer");
+        btnSupprimer.setEnabled(false);
+        btnSupprimer.addActionListener(this::btnSupprimerActionPerformed);
+
+        btnModifier.setText("Modifier");
+        btnModifier.setEnabled(false);
+        btnModifier.addActionListener(this::btnModifierActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -81,7 +92,12 @@ public class FenetreListeQuiz extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnModifier)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSupprimer)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -90,12 +106,98 @@ public class FenetreListeQuiz extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSupprimer)
+                    .addComponent(btnModifier))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tableSelectionChanged(javax.swing.event.ListSelectionEvent evt) {
+        boolean hasSelection = tableQuizzes.getSelectedRow() != -1;
+        btnSupprimer.setEnabled(hasSelection);
+        btnModifier.setEnabled(hasSelection);
+    }
+
+    private void btnSupprimerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupprimerActionPerformed
+        int selectedRow = tableQuizzes.getSelectedRow();
+        if (selectedRow == -1) {
+            return;
+        }
+
+        Quiz quizSelectionne = quizTableModel.getQuizAt(selectedRow);
+        
+        int confirmation = javax.swing.JOptionPane.showConfirmDialog(
+            this,
+            "Êtes-vous sûr de vouloir supprimer le quiz \"" + quizSelectionne.getTitre() + "\" ?",
+            "Confirmation de suppression",
+            javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.WARNING_MESSAGE
+        );
+        
+        if (confirmation == javax.swing.JOptionPane.YES_OPTION) {
+            QuizDAO quizDAO = new QuizDAO();
+            int resultat = quizDAO.supprimerQuiz(quizSelectionne.getId());
+            
+            if (resultat > 0) {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Quiz supprimé avec succès!",
+                    "Succès",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+                );
+                chargerQuizzes();
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Erreur lors de la suppression du quiz",
+                    "Erreur",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
+    }//GEN-LAST:event_btnSupprimerActionPerformed
+
+    private void btnModifierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModifierActionPerformed
+        int selectedRow = tableQuizzes.getSelectedRow();
+        if (selectedRow == -1) {
+            return;
+        }
+
+        Quiz quizSelectionne = quizTableModel.getQuizAt(selectedRow);
+        
+        String nouveauTitre = javax.swing.JOptionPane.showInputDialog(
+            this,
+            "Nouveau titre du quiz:",
+            quizSelectionne.getTitre()
+        );
+        
+        if (nouveauTitre != null && !nouveauTitre.trim().isEmpty()) {
+            QuizDAO quizDAO = new QuizDAO();
+            int resultat = quizDAO.modifierQuiz(quizSelectionne.getId(), nouveauTitre.trim());
+            
+            if (resultat > 0) {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Quiz modifié avec succès!",
+                    "Succès",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+                );
+                chargerQuizzes();
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Erreur lors de la modification du quiz",
+                    "Erreur",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
+    }//GEN-LAST:event_btnModifierActionPerformed
 
     /**
      * @param args the command line arguments
@@ -123,6 +225,8 @@ public class FenetreListeQuiz extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnModifier;
+    private javax.swing.JButton btnSupprimer;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableQuizzes;
