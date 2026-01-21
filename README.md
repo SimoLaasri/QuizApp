@@ -14,6 +14,7 @@ QuizApp is a quiz management system that allows:
 ## Requirements
 
 - **Java**: JDK 17 or higher
+- **Maven**: 3.6 or higher
 - **MySQL**: 5.7 or higher
 - **NetBeans IDE**: (recommended for development)
 
@@ -22,7 +23,7 @@ QuizApp is a quiz management system that allows:
 1. Ensure MySQL is installed and running on your system
 2. Import the database schema:
    ```bash
-   mysql -u root -p < database/schema.sql
+   mysql -u root -p < src/main/resources/database/schema.sql
    ```
 3. The script will:
    - Create the `quizapp` database
@@ -31,7 +32,7 @@ QuizApp is a quiz management system that allows:
 
 ## Configuration
 
-Update database connection settings in `src/DAO/DBConnection.java` if needed:
+Update database connection settings in `src/main/java/DAO/DBConnection.java` if needed:
 ```java
 private static final String URL = "jdbc:mysql://localhost:3306/quizapp";
 private static final String USER = "root";
@@ -41,17 +42,21 @@ private static final String PASSWORD = "";
 ## How to Run
 
 ### Using NetBeans
-1. Open the project in NetBeans
-2. Clean and build the project (F11)
-3. Run the project (F6)
+1. Open the project in NetBeans (File → Open Project)
+2. NetBeans will automatically detect it as a Maven project
+3. Right-click the project and select "Build" (or press F11)
+4. Right-click the project and select "Run" (or press F6)
 
 ### Using Command Line
 ```bash
 # Build the project
-ant clean jar
+mvn clean package
 
 # Run the application
-java -jar dist/QuizApp.jar
+mvn exec:java -Dexec.mainClass="quizapp.QuizApp"
+
+# OR run from the generated JAR
+java -jar target/QuizApp-1.0-SNAPSHOT.jar
 ```
 
 ## Default Test Accounts
@@ -72,32 +77,41 @@ After running the database schema, you can login with:
 
 ```
 QuizApp/
+├── pom.xml                           # Maven build configuration
+├── nb-configuration.xml              # NetBeans Maven configuration
 ├── src/
-│   ├── DAO/              # Data Access Objects
-│   │   ├── DBConnection.java
-│   │   ├── UtilisateurDAO.java
-│   │   ├── QuizDAO.java
-│   │   ├── QuestionDAO.java
-│   │   └── TentativeDAO.java
-│   ├── metier/           # Business Model Classes
-│   │   ├── Utilisateur.java
-│   │   ├── Quiz.java
-│   │   ├── Question.java
-│   │   ├── Tentative.java
-│   │   └── RoleUtilisateur.java
-│   ├── ihm/              # User Interface (IHM = Interface Homme-Machine)
-│   │   ├── FenetreLogin.java
-│   │   ├── FenetreInscription.java        # NEW: Student registration
-│   │   ├── FenetreEtudiant.java
-│   │   ├── FenetreEnseignant.java
-│   │   ├── FenetreQuiz.java               # UPDATED: Now with timer
-│   │   ├── FenetreCreationQuiz.java
-│   │   └── FenetreListeQuiz.java
-│   └── quizapp/
-│       └── QuizApp.java  # Main entry point
-├── database/
-│   └── schema.sql        # Database schema and test data
-└── build.xml             # Ant build file
+│   └── main/
+│       ├── java/
+│       │   ├── DAO/                  # Data Access Objects
+│       │   │   ├── DBConnection.java
+│       │   │   ├── UtilisateurDAO.java
+│       │   │   ├── QuizDAO.java
+│       │   │   ├── QuestionDAO.java
+│       │   │   └── TentativeDAO.java
+│       │   ├── metier/               # Business Model Classes
+│       │   │   ├── Utilisateur.java
+│       │   │   ├── Quiz.java
+│       │   │   ├── Question.java
+│       │   │   ├── Tentative.java
+│       │   │   └── RoleUtilisateur.java
+│       │   ├── model/                # Table Models
+│       │   │   ├── QuizTableModel.java
+│       │   │   ├── TentativeTableModel.java
+│       │   │   └── MesResultatsTableModel.java
+│       │   ├── ihm/                  # User Interface (IHM = Interface Homme-Machine)
+│       │   │   ├── FenetreLogin.java/.form
+│       │   │   ├── FenetreInscription.java/.form        # NEW: Student registration
+│       │   │   ├── FenetreEtudiant.java/.form
+│       │   │   ├── FenetreEnseignant.java/.form
+│       │   │   ├── FenetreQuiz.java/.form               # UPDATED: Now with timer
+│       │   │   ├── FenetreCreationQuiz.java/.form
+│       │   │   └── FenetreListeQuiz.java/.form
+│       │   └── quizapp/
+│       │       └── QuizApp.java      # Main entry point
+│       └── resources/
+│           └── database/
+│               └── schema.sql        # Database schema and test data
+└── target/                           # Maven build output (generated)
 ```
 
 ## Features
@@ -144,7 +158,8 @@ Quizzes now feature an integrated countdown timer:
 - **GUI Framework**: Java Swing
 - **Database**: MySQL
 - **Architecture**: DAO Pattern (Data Access Object)
-- **Build Tool**: Apache Ant
+- **Build Tool**: Apache Maven
+- **Java Version**: 17
 
 ## License
 
