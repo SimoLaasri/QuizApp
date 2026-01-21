@@ -57,4 +57,61 @@ public class UtilisateurDAO {
         }
         return utilisateurs;
     }
+    
+    /**
+     * Register a new student in the database
+     * @param username Student's username
+     * @param password Student's password
+     * @param nom Student's last name
+     * @param prenom Student's first name
+     * @return The ID of the newly created user, or -1 if failed
+     * 
+     * Note: This implementation stores passwords in plain text to maintain 
+     * consistency with the existing authentication method. For production use,
+     * passwords should be hashed using BCrypt or similar secure algorithm.
+     */
+    public int inscrireEtudiant(String username, String password, String nom, String prenom) {
+        int userId = -1;
+        try {
+            String request = "INSERT INTO utilisateur (username, password, nom, prenom, role) VALUES (?, ?, ?, ?, 'ETUDIANT')";
+            PreparedStatement pstmt = con.prepareStatement(request, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            pstmt.setString(3, nom);
+            pstmt.setString(4, prenom);
+            
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                ResultSet generatedKeys = pstmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    userId = generatedKeys.getInt(1);
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println("Erreur inscrireEtudiant");
+            ex.printStackTrace();
+        }
+        return userId;
+    }
+    
+    /**
+     * Check if a username already exists in the database
+     * @param username Username to check
+     * @return true if username exists, false otherwise
+     */
+    public boolean usernameExiste(String username) {
+        try {
+            String request = "SELECT COUNT(*) FROM utilisateur WHERE username = ?";
+            PreparedStatement pstmt = con.prepareStatement(request);
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException ex) {
+            System.out.println("Erreur usernameExiste");
+            ex.printStackTrace();
+        }
+        return false;
+    }
 }

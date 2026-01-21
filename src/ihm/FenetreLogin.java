@@ -34,6 +34,7 @@ public class FenetreLogin extends javax.swing.JFrame {
         jPasswordFieldMotDePasse = new javax.swing.JPasswordField();
         jButtonSeConnecter = new javax.swing.JButton();
         jLabelMessage = new javax.swing.JLabel();
+        jButtonCreerCompte = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Authentification");
@@ -49,6 +50,9 @@ public class FenetreLogin extends javax.swing.JFrame {
         jButtonSeConnecter.addActionListener(this::jButtonSeConnecterActionPerformed);
 
         jLabelMessage.setForeground(new java.awt.Color(255, 51, 51));
+
+        jButtonCreerCompte.setText("Créer un compte");
+        jButtonCreerCompte.addActionListener(this::jButtonCreerCompteActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -68,7 +72,10 @@ public class FenetreLogin extends javax.swing.JFrame {
                             .addComponent(jPasswordFieldMotDePasse)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(138, 138, 138)
-                        .addComponent(jButtonSeConnecter)))
+                        .addComponent(jButtonSeConnecter))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(128, 128, 128)
+                        .addComponent(jButtonCreerCompte)))
                 .addContainerGap(132, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -84,7 +91,9 @@ public class FenetreLogin extends javax.swing.JFrame {
                 .addComponent(jPasswordFieldMotDePasse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonSeConnecter)
-                .addGap(48, 48, 48)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonCreerCompte)
+                .addGap(24, 24, 24)
                 .addComponent(jLabelMessage)
                 .addGap(12, 12, 12))
         );
@@ -128,6 +137,12 @@ public class FenetreLogin extends javax.swing.JFrame {
     this.dispose();
     }//GEN-LAST:event_jButtonSeConnecterActionPerformed
 
+    private void jButtonCreerCompteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreerCompteActionPerformed
+        // Open registration window
+        new FenetreInscription().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButtonCreerCompteActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -154,6 +169,7 @@ public class FenetreLogin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonCreerCompte;
     private javax.swing.JButton jButtonSeConnecter;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

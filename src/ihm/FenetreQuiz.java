@@ -18,6 +18,8 @@ import metier.Utilisateur;
  */
 public class FenetreQuiz extends javax.swing.JFrame {
     private static final double PERCENTAGE_MULTIPLIER = 100.0;
+    private static final int TIMER_SECONDS_PER_QUESTION = 30; // 30 seconds per question
+    private static final int WARNING_THRESHOLD_SECONDS = 30; // Show warning when 30 seconds remain in total
     
     private List<Question> questions;
     private int indexQuestion = 0;
@@ -26,6 +28,12 @@ public class FenetreQuiz extends javax.swing.JFrame {
     private int quizId = -1;
     private Utilisateur utilisateurConnecte;
     private int[] reponses; // Store selected answers for each question (-1 = not answered)
+    
+    // Timer related fields
+    private javax.swing.Timer timer;
+    private int tempsRestantSecondes;
+    private int tempsTotalQuiz;
+    private boolean warningShown = false;
 
 private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FenetreQuiz.class.getName());
 
@@ -47,7 +55,13 @@ public FenetreQuiz(String titreQuiz, Utilisateur utilisateur) {
     chargerQuestions();
     reponses = new int[questions.size()];
     java.util.Arrays.fill(reponses, -1); // -1 means not answered
+    
+    // Initialize timer
+    tempsTotalQuiz = questions.size() * TIMER_SECONDS_PER_QUESTION;
+    tempsRestantSecondes = tempsTotalQuiz;
+    
     afficherQuestion();
+    demarrerTimer();
 }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -68,6 +82,7 @@ public FenetreQuiz(String titreQuiz, Utilisateur utilisateur) {
         radioD = new javax.swing.JRadioButton();
         btnPrecedent = new javax.swing.JButton();
         btnSuivant = new javax.swing.JButton();
+        labelTempsRestant = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Quiz");
@@ -76,6 +91,10 @@ public FenetreQuiz(String titreQuiz, Utilisateur utilisateur) {
 
         labelQuizTitre.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         labelQuizTitre.setText("Quiz :  ");
+        
+        labelTempsRestant.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        labelTempsRestant.setForeground(new java.awt.Color(0, 102, 204));
+        labelTempsRestant.setText("Temps restant: 00:00");
 
         labelQuestion.setText("Question ici ");
 
@@ -116,7 +135,8 @@ public FenetreQuiz(String titreQuiz, Utilisateur utilisateur) {
                     .addComponent(labelQuestion)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelQuizTitre, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(radioC))
+                    .addComponent(radioC)
+                    .addComponent(labelTempsRestant))
                 .addContainerGap(132, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -126,6 +146,8 @@ public FenetreQuiz(String titreQuiz, Utilisateur utilisateur) {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelQuizTitre, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelTempsRestant)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelQuestion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -281,6 +303,9 @@ radioD.setText(choix.get(3));
     }
 
     private void afficherResultats() {
+        // Stop timer when showing results
+        arreterTimer();
+        
         int totalQuestions = questions.size();
         double pourcentage = totalQuestions > 0 ? (score * PERCENTAGE_MULTIPLIER / totalQuestions) : 0;
         
@@ -304,6 +329,71 @@ radioD.setText(choix.get(3));
         
         this.dispose();
     }
+
+    /**
+     * Start the countdown timer for the quiz
+     */
+    private void demarrerTimer() {
+        // Create a timer that fires every second (1000 ms)
+        timer = new javax.swing.Timer(1000, e -> {
+            tempsRestantSecondes--;
+            mettreAJourAffichageTimer();
+            
+            // Show warning when 30 seconds remain
+            if (tempsRestantSecondes == WARNING_THRESHOLD_SECONDS && !warningShown) {
+                warningShown = true;
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Attention ! Il vous reste 30 secondes pour terminer le quiz !",
+                    "Avertissement",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+                );
+            }
+            
+            // Auto-submit when time runs out
+            if (tempsRestantSecondes <= 0) {
+                arreterTimer();
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Temps écoulé ! Le quiz est terminé automatiquement.",
+                    "Fin du temps",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+                );
+                calculerScore();
+                afficherResultats();
+            }
+        });
+        
+        mettreAJourAffichageTimer();
+        timer.start();
+    }
+    
+    /**
+     * Stop the timer
+     */
+    private void arreterTimer() {
+        if (timer != null && timer.isRunning()) {
+            timer.stop();
+        }
+    }
+    
+    /**
+     * Update the timer display label
+     */
+    private void mettreAJourAffichageTimer() {
+        int minutes = tempsRestantSecondes / 60;
+        int secondes = tempsRestantSecondes % 60;
+        String texteTimer = String.format("Temps restant: %02d:%02d", minutes, secondes);
+        labelTempsRestant.setText(texteTimer);
+        
+        // Change color to red when less than or equal to 30 seconds remain
+        if (tempsRestantSecondes <= WARNING_THRESHOLD_SECONDS) {
+            labelTempsRestant.setForeground(new java.awt.Color(255, 0, 0));
+        } else {
+            labelTempsRestant.setForeground(new java.awt.Color(0, 102, 204));
+        }
+    }
+
 
     /**
      * @param args the command line arguments
@@ -337,6 +427,7 @@ radioD.setText(choix.get(3));
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel labelQuestion;
     private javax.swing.JLabel labelQuizTitre;
+    private javax.swing.JLabel labelTempsRestant;
     private javax.swing.JRadioButton radioA;
     private javax.swing.JRadioButton radioB;
     private javax.swing.JRadioButton radioC;

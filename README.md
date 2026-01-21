@@ -6,8 +6,10 @@ A Java Swing application for creating and taking quizzes, designed for both stud
 
 QuizApp is a quiz management system that allows:
 - **Teachers (Enseignants)** to create quizzes with multiple-choice questions
-- **Students (Étudiants)** to take quizzes and view their scores
+- **Students (Étudiants)** to register, take quizzes, and view their scores
 - Automatic score calculation and result tracking
+- **NEW**: Student self-registration system
+- **NEW**: Quiz timer with countdown and auto-submit
 
 ## Requirements
 
@@ -64,6 +66,8 @@ After running the database schema, you can login with:
 - Username: `etudiant1`
 - Password: `etu123`
 
+**Or create a new student account using the registration feature!**
+
 ## Project Structure
 
 ```
@@ -83,9 +87,10 @@ QuizApp/
 │   │   └── RoleUtilisateur.java
 │   ├── ihm/              # User Interface (IHM = Interface Homme-Machine)
 │   │   ├── FenetreLogin.java
+│   │   ├── FenetreInscription.java        # NEW: Student registration
 │   │   ├── FenetreEtudiant.java
 │   │   ├── FenetreEnseignant.java
-│   │   ├── FenetreQuiz.java
+│   │   ├── FenetreQuiz.java               # UPDATED: Now with timer
 │   │   ├── FenetreCreationQuiz.java
 │   │   └── FenetreListeQuiz.java
 │   └── quizapp/
@@ -98,10 +103,16 @@ QuizApp/
 ## Features
 
 ### For Students
+- **Self-Registration**: Create a student account without admin intervention
 - Login to the system
 - Select and take available quizzes
+- **Timed Quizzes**: Complete quizzes with a countdown timer (30 seconds per question)
+  - Visual timer display showing remaining time
+  - Warning at 30 seconds remaining
+  - Automatic submission when time expires
 - View immediate score after completing a quiz
 - Multiple-choice questions with A, B, C, D options
+- Navigate back and forth between questions
 
 ### For Teachers
 - Login to the system
@@ -109,6 +120,23 @@ QuizApp/
 - Add multiple questions to each quiz
 - Specify correct answers for each question
 - View list of all available quizzes
+
+### Registration System
+The new student registration system includes:
+- Simple registration form with username, password, name fields
+- Password confirmation validation
+- Username uniqueness checking
+- Automatic role assignment as "ÉTUDIANT" (Student)
+- Direct navigation from login screen
+- Immediate feedback on success or errors
+
+### Quiz Timer
+Quizzes now feature an integrated countdown timer:
+- **Time Allocation**: 30 seconds per question (configurable)
+- **Visual Display**: Red timer showing MM:SS format
+- **Warning System**: Alert when 30 seconds remain
+- **Auto-Submit**: Quiz automatically submits when time expires
+- **Prominent Display**: Timer visible at all times during quiz
 
 ## Technical Details
 
