@@ -65,11 +65,11 @@ public class FenetreMesResultats extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Quiz", "Score", "Date"
+                "Quiz", "Score"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -79,9 +79,8 @@ public class FenetreMesResultats extends javax.swing.JFrame {
         tableResultats.setRowHeight(25);
         jScrollPane1.setViewportView(tableResultats);
         if (tableResultats.getColumnModel().getColumnCount() > 0) {
-            tableResultats.getColumnModel().getColumn(0).setPreferredWidth(200);
-            tableResultats.getColumnModel().getColumn(1).setPreferredWidth(80);
-            tableResultats.getColumnModel().getColumn(2).setPreferredWidth(120);
+            tableResultats.getColumnModel().getColumn(0).setPreferredWidth(250);
+            tableResultats.getColumnModel().getColumn(1).setPreferredWidth(100);
         }
 
         btnActualiser.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
