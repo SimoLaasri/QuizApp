@@ -25,6 +25,7 @@ public class FenetreQuiz extends javax.swing.JFrame {
     private int score = 0;
     private int quizId = -1;
     private Utilisateur utilisateurConnecte;
+    private int[] reponses; // Store selected answers for each question (-1 = not answered)
 
 private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FenetreQuiz.class.getName());
 
@@ -44,6 +45,8 @@ public FenetreQuiz(String titreQuiz, Utilisateur utilisateur) {
 
     labelQuizTitre.setText("Quiz : " + titreQuiz);
     chargerQuestions();
+    reponses = new int[questions.size()];
+    java.util.Arrays.fill(reponses, -1); // -1 means not answered
     afficherQuestion();
 }
     /**
@@ -63,6 +66,7 @@ public FenetreQuiz(String titreQuiz, Utilisateur utilisateur) {
         radioB = new javax.swing.JRadioButton();
         radioC = new javax.swing.JRadioButton();
         radioD = new javax.swing.JRadioButton();
+        btnPrecedent = new javax.swing.JButton();
         btnSuivant = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -88,6 +92,10 @@ public FenetreQuiz(String titreQuiz, Utilisateur utilisateur) {
         radioD.setText("Réponse D");
         radioD.addActionListener(this::radioDActionPerformed);
 
+        btnPrecedent.setText("Précédent");
+        btnPrecedent.setEnabled(false);
+        btnPrecedent.addActionListener(this::btnPrecedentActionPerformed);
+
         btnSuivant.setText("Suivant");
         btnSuivant.addActionListener(this::btnSuivantActionPerformed);
 
@@ -98,7 +106,10 @@ public FenetreQuiz(String titreQuiz, Utilisateur utilisateur) {
             .addGroup(layout.createSequentialGroup()
                 .addGap(114, 114, 114)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSuivant)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnPrecedent)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnSuivant))
                     .addComponent(radioD)
                     .addComponent(radioB)
                     .addComponent(radioA)
@@ -126,7 +137,9 @@ public FenetreQuiz(String titreQuiz, Utilisateur utilisateur) {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(radioD)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSuivant)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPrecedent)
+                    .addComponent(btnSuivant))
                 .addGap(32, 32, 32))
         );
 
@@ -187,6 +200,18 @@ radioD.setText(choix.get(3));
 
 
     buttonGroup1.clearSelection();
+    
+    // Restore previously selected answer if exists
+    if (reponses != null && indexQuestion >= 0 && indexQuestion < reponses.length && reponses[indexQuestion] != -1) {
+        switch (reponses[indexQuestion]) {
+            case 0: radioA.setSelected(true); break;
+            case 1: radioB.setSelected(true); break;
+            case 2: radioC.setSelected(true); break;
+            case 3: radioD.setSelected(true); break;
+        }
+    }
+    
+    mettreAJourBoutons();
 }
 
     private void radioDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioDActionPerformed
@@ -194,33 +219,66 @@ radioD.setText(choix.get(3));
     }//GEN-LAST:event_radioDActionPerformed
 
     private void btnSuivantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuivantActionPerformed
-        // Check if an answer is selected
-        if (buttonGroup1.getSelection() != null) {
-            // Determine which radio button is selected
-            int selectedAnswer = -1;
-            if (radioA.isSelected()) selectedAnswer = 0;
-            else if (radioB.isSelected()) selectedAnswer = 1;
-            else if (radioC.isSelected()) selectedAnswer = 2;
-            else if (radioD.isSelected()) selectedAnswer = 3;
-
-            // Check if the answer is correct
-            if (selectedAnswer != -1 && indexQuestion < questions.size()) {
-                Question currentQuestion = questions.get(indexQuestion);
-                if (selectedAnswer == currentQuestion.getBonneReponse()) {
-                    score++;
-                }
-            }
-        }
-
-        indexQuestion++;
+        // Save current answer
+        sauvegarderReponse();
         
-        if (indexQuestion >= questions.size()) {
-            // Quiz finished - show results
-            afficherResultats();
+        if (indexQuestion >= questions.size() - 1) {
+            // Last question - show confirmation dialog
+            int confirmation = javax.swing.JOptionPane.showConfirmDialog(
+                this,
+                "Voulez-vous terminer le quiz ?",
+                "Confirmation",
+                javax.swing.JOptionPane.YES_NO_OPTION
+            );
+            
+            if (confirmation == javax.swing.JOptionPane.YES_OPTION) {
+                calculerScore();
+                afficherResultats();
+            }
         } else {
+            indexQuestion++;
             afficherQuestion();
         }
     }//GEN-LAST:event_btnSuivantActionPerformed
+
+    private void btnPrecedentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrecedentActionPerformed
+        // Save current answer before going back
+        sauvegarderReponse();
+        
+        indexQuestion--;
+        afficherQuestion();
+    }//GEN-LAST:event_btnPrecedentActionPerformed
+    
+    private void sauvegarderReponse() {
+        if (indexQuestion >= 0 && indexQuestion < questions.size() && reponses != null && indexQuestion < reponses.length) {
+            if (radioA.isSelected()) reponses[indexQuestion] = 0;
+            else if (radioB.isSelected()) reponses[indexQuestion] = 1;
+            else if (radioC.isSelected()) reponses[indexQuestion] = 2;
+            else if (radioD.isSelected()) reponses[indexQuestion] = 3;
+            else reponses[indexQuestion] = -1;
+        }
+    }
+    
+    private void mettreAJourBoutons() {
+        // Disable "Précédent" on first question
+        btnPrecedent.setEnabled(indexQuestion > 0);
+        
+        // Change "Suivant" to "Terminer" on last question
+        if (indexQuestion >= questions.size() - 1) {
+            btnSuivant.setText("Terminer");
+        } else {
+            btnSuivant.setText("Suivant");
+        }
+    }
+    
+    private void calculerScore() {
+        score = 0;
+        for (int i = 0; i < questions.size(); i++) {
+            if (reponses[i] == questions.get(i).getBonneReponse()) {
+                score++;
+            }
+        }
+    }
 
     private void afficherResultats() {
         int totalQuestions = questions.size();
@@ -273,6 +331,7 @@ radioD.setText(choix.get(3));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnPrecedent;
     private javax.swing.JButton btnSuivant;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabel1;
