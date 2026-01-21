@@ -35,12 +35,7 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
     initComponents();
 }
 public FenetreQuiz(String titreQuiz) {
-    initComponents();
-    this.titreQuiz = titreQuiz;
-
-    labelQuizTitre.setText("Quiz : " + titreQuiz);
-    chargerQuestions();
-    afficherQuestion();
+    this(titreQuiz, null);
 }
 public FenetreQuiz(String titreQuiz, Utilisateur utilisateur) {
     this.titreQuiz = titreQuiz;

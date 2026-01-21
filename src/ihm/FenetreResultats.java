@@ -6,7 +6,7 @@ package ihm;
 
 import DAO.TentativeDAO;
 import metier.Tentative;
-import model.ResultatTableModel;
+import model.TentativeTableModel;
 import java.util.List;
 
 /**
@@ -16,22 +16,22 @@ import java.util.List;
 public class FenetreResultats extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FenetreResultats.class.getName());
-    private ResultatTableModel resultatTableModel;
+    private TentativeTableModel tentativeTableModel;
 
     /**
      * Creates new form FenetreResultats
      */
     public FenetreResultats() {
         initComponents();
-        resultatTableModel = new ResultatTableModel();
-        tableResultats.setModel(resultatTableModel);
+        tentativeTableModel = new TentativeTableModel();
+        tableResultats.setModel(tentativeTableModel);
         chargerResultats();
     }
 
     private void chargerResultats() {
         TentativeDAO tentativeDAO = new TentativeDAO();
         List<Tentative> tentatives = tentativeDAO.recupererToutesTentatives();
-        resultatTableModel.setItems(tentatives);
+        tentativeTableModel.setItems(tentatives);
     }
 
     private void actualiserResultats() {

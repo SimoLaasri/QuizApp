@@ -35,7 +35,7 @@ public class TentativeDAO {
     public List<Tentative> recupererListTentativeParEtudiant(int etudiantId) {
         List<Tentative> tentatives = new ArrayList<>();
         try {
-            String request = "SELECT t.*, u.id as uid, u.username, u.password, u.nom, u.prenom, u.role, " +
+            String request = "SELECT t.*, u.id as uid, u.username, u.nom, u.prenom, u.role, " +
                            "q.id as qid, q.titre " +
                            "FROM tentative t " +
                            "JOIN utilisateur u ON t.etudiant_id = u.id " +
@@ -63,7 +63,7 @@ public class TentativeDAO {
     public List<Tentative> recupererListTentativeParQuiz(int quizId) {
         List<Tentative> tentatives = new ArrayList<>();
         try {
-            String request = "SELECT t.*, u.id as uid, u.username, u.password, u.nom, u.prenom, u.role, " +
+            String request = "SELECT t.*, u.id as uid, u.username, u.nom, u.prenom, u.role, " +
                            "q.id as qid, q.titre " +
                            "FROM tentative t " +
                            "JOIN utilisateur u ON t.etudiant_id = u.id " +
@@ -91,7 +91,7 @@ public class TentativeDAO {
     public List<Tentative> recupererToutesTentatives() {
         List<Tentative> tentatives = new ArrayList<>();
         try {
-            String request = "SELECT t.*, u.id as uid, u.username, u.password, u.nom, u.prenom, u.role, " +
+            String request = "SELECT t.*, u.id as uid, u.username, u.nom, u.prenom, u.role, " +
                            "q.id as qid, q.titre " +
                            "FROM tentative t " +
                            "JOIN utilisateur u ON t.etudiant_id = u.id " +
